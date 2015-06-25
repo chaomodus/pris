@@ -1,0 +1,20 @@
+# this is a configuration file for the nuclear reactor.
+
+'metadata':{
+'name'='Reactor1'
+'noExplode'=True
+}
+
+'rods':[
+{'name'='rod1',
+ 'position'='up',
+ 'origin'='Z111E-3',
+ 'uuid'=(0x2602ba42, 0x1efd, 0x4e19, 0x9293, 0x9920843bc617)
+}
+
+{'name'='rod2',
+ 'position'='up',
+ 'origin'='Z111E-7',
+ 'uuid'=(0x9cac03e2, 0x0f08, 0x4337, 0x9042, 0x334d36ae4bb5)
+}
+]

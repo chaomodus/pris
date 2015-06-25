@@ -1,0 +1,53 @@
+@@comments :: /^#.?$/
+@@eol_comments :: /#.*?$/
+
+start = {((@:tl_directive eol) | @:tl_keyvalue[','] | @:tl_nulllist | @:tl_nulldict | @:tl_listvalue | @:tl_dictvalue | @:tl_value)}*;
+
+directive = directive:(PARAMDIRECTIVE | 'reset' | 'nofold');
+PARAMDIRECTIVE = ('include' | 'encoding')string;
+
+key = bool|atom|string|simplenumber|hexnumber;
+value = null|hexnumber|decnumber|string|bool|nulldict|nulllist|listvalue|dictvalue;
+
+string = string:base_string;
+bool = bool:base_bool;
+null = null:base_null;
+atom = atom:base_atom;
+decnumber = decnumber:base_decnumber;
+hexnumber = hexnumber:base_hexnumber;
+simplenumber = simplenumber:base_simplenumber;
+
+listvalue = iter:base_listvalue;
+dictvalue = iter:base_dictvalue;
+
+nulllist = nulliter:base_null_list;
+nulldict = nulliter:base_null_dict;
+
+base_listvalue = '[' ~ {@:tl_value [',']}* ']' |
+	         '(' ~ {@:tl_value [',']}* ')' ;
+base_dictvalue = '{' ~ {@:tl_keyvalue [',']}* '}';
+
+base_bool = 'yes'|'no'|'true'|'false'|'True'|'False'|'TRUE'|'FALSE'|'t'|'f';
+base_null = 'None'|'null'|'void'|'nil'|'NULL';
+base_atom = /[A-Za-z_][A-Za-z0-9_-]?/;
+base_sstring = "'" ~ @:{/[^'\\]/ | escapes} "'";
+base_dstring = '"' ~ @:{/[^"\\]/ | escapes} '"';
+base_string = base_sstring | base_dstring;
+escapes = /\\['"\\nrtbfv]/ | ?/\\u[a-fA-F0-9]{4}/?;
+base_simplenumber = /[0-9]+/;
+base_decnumber = /-?[0-9]+(\.[0-9]+)?(e[0-9]+)?/;
+base_hexnumber = /0x[0-9A-Fa-f]+/;
+base_null_dict = '{' '}';
+base_null_list = '[' ']' |
+                 '(' ')' ;
+base_kvp = (@:key ('='|':') @:value);
+
+eol = ({'\r'|'\n'});
+
+tl_keyvalue = kvp:base_kvp;
+tl_value = value;
+tl_directive = '?' @:directive;
+tl_listvalue = listvalue;
+tl_dictvalue = dictvalue;
+tl_nulllist =  nulllist;
+tl_nulldict = nulldict;

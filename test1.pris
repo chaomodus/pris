@@ -1,0 +1,38 @@
+# Torture testing various parts of the parsing and processing system
+?encoding "utf-8"
+?reset
+?nofold
+
+2:'gnardo\npollo'
+
+0:"test"
+"testing":123
+"rediculous":-1.0e23
+#comment
+5:t
+
+7=true,
+
+23=FALSE
+
+"seventeen sixty four ééûéûéû":0xDEADBEEF # comment
+
+
+'simplelist': [1,
+2,
+3,
+4,
+'\u3343',
+]
+
+'dtest':{'a':1,'b':false}
+
+{'definitive top level dict':3, 'test':2}
+{'omg':nil}
+
+'value'
+
+'nulldict'={}
+"a_null_list" : [  ]
+
+'val'="TEST STRING OMG \n\tOMG"
