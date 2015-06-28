@@ -1,6 +1,5 @@
-import parse_pris
+from . import parse_pris
 import grako
-import sys
 import collections
 
 TRUEVALUES = ('true', 'True', 'TRUE', 't', 'yes')
@@ -162,8 +161,3 @@ def load(f):
     """Load a file-like object (which exposes read) as a PRIS file."""
     data = f.read()
     return loads(data)
-
-if __name__ == '__main__':
-    result = load(open(sys.argv[1]))
-    for item in result:
-        print item, '=', result[item]
