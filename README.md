@@ -16,7 +16,7 @@ PRIS is the solution!
 PRIS IS:
 
 * A human-writable object description format
-* Completely UTF-8
+* Strings are UTF-8
 * Super forgiving
 * JSON compatible (well the parser can load JSON files)
 * Never again have to remember nil/null/void, true/t/TRUE, etc.
@@ -26,23 +26,7 @@ PRIS IS:
 
 Sounds good?
 
-## Overall Syntax
-
-### Directives
-
-Lines that start with ? are processing directives.
-
-There are these directives defined:
-
-* `?nofold` - Instructs the processor not to fold a top-level single object into the top level namespace. Under normal
-  circumstances, a JSON file containing one dictionary is folded into the top-level namespace, this prevents that.
-* `?reset` - Under normal circumstances, the processor assigns a sequential numeric key to each unlabeled value in the
-  file. This resets that counter to 0 at the spot that it occurs. Useful for the `?include` directive.
-* `?include "file"` - Include the contents of specified `file` at this position.
-* `?encoding "encoding"` - Specify that this content should be seen as `encoding`. "utf-8" is the only supported value
-  (and will always be the default).
-
-### Top-level syntax
+## Top-level syntax
 
 Objects are defined by an optional key and a value.
 
@@ -51,6 +35,7 @@ Values can be one of:
 * Lists, denoted by [] or () containining a comma-separated list of values.
 * Dictionaries, denoted by {} containing a comma-separated list of key-value pairs.
 * Strings, enclosed with " or ', containing arbitrary strings, with pythonic escape characters.
+* Unenclosed strings which end at the end of the line.
 * Numbers, either decimal, hex or scientific (73, 1.2, 0xDEADBEEF and 1.7e23 are valid numbers).
 * Bools which are barewords in one of `true`, `false`, `True`, `False`, `TRUE`, `FALSE`, `t`, or `f`
 * Null values which are {}, [], () or `void`, `nil`, `None`, `null`, or `NULL`
@@ -62,6 +47,7 @@ Keys are either:
 * Strings (enquoted)
 * Simple numbers in the form of one or more decimal digits
 * Bools
+* Atoms, strings starting with [A-Za-z_] and followed by [A-Za-z_.-]
 
 Keys are separated from values by a `=` or a `:`.
 

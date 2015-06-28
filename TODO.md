@@ -14,16 +14,14 @@
   least you can write a JSON file. Of course PRIS is mostly for humans to write comfortably
   so this isn't a huge priority.
 
-* Support atom-style keys (unquoted alphanumerics that follow python symbol syntax), eg.
-  [A-Za-z_][A-Za-z0-9_]*.
-
 * Along those lines, support for heirarchical atom-style keys that introduce layering in
-  the output dict (eg myobject.thing.deepkey).
+  the output dict (eg myobject.thing.deepkey). Atoms can already have .s in them, so
+  this should be an easy processing step.
 
 * Basically if something annoys you in writing configuration files, we can try to address
   it in the format (as long as it maintains JSON-read compatibility).
 
-* Implement ?include directive.
+* Do something interesting with directives (we do nothing with them except for ?nofold).
 
 * Make parser validate files and not just stop when it encounters a syntax error (my
   inexperience with Grako is palpable).

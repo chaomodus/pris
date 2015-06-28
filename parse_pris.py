@@ -15,7 +15,7 @@ from __future__ import print_function, division, absolute_import, unicode_litera
 from grako.parsing import graken, Parser
 
 
-__version__ = (2015, 6, 24, 17, 33, 22, 2)
+__version__ = (2015, 6, 28, 20, 51, 31, 6)
 
 __all__ = [
     'prisParser',
@@ -68,6 +68,7 @@ class prisParser(Parser):
                         self.ast['@'] = self.last_node
                     self._error('no available options')
         self._closure(block0)
+        self._check_eof()
 
     @graken()
     def _directive_(self):
@@ -134,11 +135,23 @@ class prisParser(Parser):
                 self._listvalue_()
             with self._option():
                 self._dictvalue_()
+            with self._option():
+                self._eolstring_()
             self._error('no available options')
 
     @graken()
     def _string_(self):
         self._base_string_()
+        self.ast['string'] = self.last_node
+
+        self.ast._define(
+            ['string'],
+            []
+        )
+
+    @graken()
+    def _eolstring_(self):
+        self._base_eolstring_()
         self.ast['string'] = self.last_node
 
         self.ast._define(
@@ -328,7 +341,12 @@ class prisParser(Parser):
 
     @graken()
     def _base_atom_(self):
-        self._pattern(r'[A-Za-z_][A-Za-z0-9_-]?')
+        self._pattern(r'^[A-Za-z_]')
+        self._cut()
+
+        def block0():
+            self._pattern(r'[A-Za-z0-9._-]')
+        self._closure(block0)
 
     @graken()
     def _base_sstring_(self):
@@ -361,6 +379,21 @@ class prisParser(Parser):
         self._closure(block1)
         self.ast['@'] = self.last_node
         self._token('"')
+
+    @graken()
+    def _base_eolstring_(self):
+
+        def block1():
+            with self._choice():
+                with self._option():
+                    self._pattern(r'[^"\'\\\n\r\]\[\)\){}]')
+                with self._option():
+                    self._escapes_()
+                self._error('expecting one of: [^"\'\\\\\\n\\r\\]\\[\\)\\){}]')
+        self._positive_closure(block1)
+
+        self.ast['@'] = self.last_node
+        self._eol_()
 
     @graken()
     def _base_string_(self):
@@ -420,6 +453,7 @@ class prisParser(Parser):
                     with self._option():
                         self._token(':')
                     self._error('expecting one of: : =')
+            self._cut()
             self._value_()
             self.ast['@'] = self.last_node
 
@@ -492,6 +526,9 @@ class prisSemantics(object):
     def string(self, ast):
         return ast
 
+    def eolstring(self, ast):
+        return ast
+
     def bool(self, ast):
         return ast
 
@@ -541,6 +578,9 @@ class prisSemantics(object):
         return ast
 
     def base_dstring(self, ast):
+        return ast
+
+    def base_eolstring(self, ast):
         return ast
 
     def base_string(self, ast):

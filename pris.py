@@ -11,6 +11,26 @@ class PrisSemantics(object):
     """These mostly convert typed values into python-native values and fix
        oddities in the AST."""
 
+    def atom(self, ast):
+        myast = grako.ast.AST()
+        string = ast['atom'][0]
+        string += u''.join(ast['atom'][1])
+        myast[u'rawvalue'] = string
+        return myast
+
+    def eolstring(self, ast):
+        myast = grako.ast.AST()
+        unescaped = u''
+        for i in ast['string']:
+            if len(i) and i[0] == '\\':
+                unescaped = unescaped + i.decode('unicode_escape')
+            else:
+                unescaped += i
+
+        myast[u'rawvalue'] = unescaped
+        return myast
+
+
     def string(self, ast):
         myast = grako.ast.AST()
         unescaped = u''
@@ -101,7 +121,7 @@ def process_ast(ast, flags=None):
         k, v = process_ast_value(ast)
         if not k:
             k = 0
-        if 'nofold' in flags:
+        if 'nofold' in flags or k != 0:
             outp[k] = v
         else:
             outp = v
