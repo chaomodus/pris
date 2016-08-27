@@ -30,12 +30,12 @@ base_dictvalue = '{' ~ {@:tl_keyvalue [',']}* '}';
 
 base_bool = 'yes'|'no'|'true'|'false'|'True'|'False'|'TRUE'|'FALSE'|'t'|'f';
 base_null = 'None'|'null'|'void'|'nil'|'NULL';
-base_atom = /^[A-Za-z_]/~{/[A-Za-z0-9._-]/}*;
+base_atom = /^[A-Za-z%*_]/~{/[A-Za-z0-9%*._-]/}*;
 base_sstring = "'" ~ @:{/[^'\\]/ | escapes} "'";
 base_dstring = '"' ~ @:{/[^"\\]/ | escapes} '"';
-base_eolstring = @:{/[^"'\\\n\r\]\[\)\){}]/ | escapes}+ eol;
+base_eolstring = @:{/[^"'\\\n\r\,]\[\)\){}]/ | escapes}+ eol;
 base_string = base_sstring | base_dstring;
-escapes = /\\['"\\nrtbfv]/ | ?/\\u[a-fA-F0-9]{4}/?;
+escapes = /\\['"\\nrtbfv,]/ | ?/\\u[a-fA-F0-9]{4}/?;
 base_simplenumber = /[0-9]+/;
 base_decnumber = /-?[0-9]+(\.[0-9]+)?(e[0-9]+)?/;
 base_hexnumber = /0x[0-9A-Fa-f]+/;

@@ -15,7 +15,7 @@ from __future__ import print_function, division, absolute_import, unicode_litera
 from grako.parsing import graken, Parser
 
 
-__version__ = (2015, 6, 28, 20, 51, 31, 6)
+__version__ = (2016, 1, 12, 8, 0, 48, 1)
 
 __all__ = [
     'prisParser',
@@ -341,11 +341,11 @@ class prisParser(Parser):
 
     @graken()
     def _base_atom_(self):
-        self._pattern(r'^[A-Za-z_]')
+        self._pattern(r'^[A-Za-z%*_]')
         self._cut()
 
         def block0():
-            self._pattern(r'[A-Za-z0-9._-]')
+            self._pattern(r'[A-Za-z0-9%*._-]')
         self._closure(block0)
 
     @graken()
@@ -386,10 +386,10 @@ class prisParser(Parser):
         def block1():
             with self._choice():
                 with self._option():
-                    self._pattern(r'[^"\'\\\n\r\]\[\)\){}]')
+                    self._pattern(r'[^"\'\\\n\r\,]\[\)\){}]')
                 with self._option():
                     self._escapes_()
-                self._error('expecting one of: [^"\'\\\\\\n\\r\\]\\[\\)\\){}]')
+                self._error('expecting one of: [^"\'\\\\\\n\\r\\,]\\[\\)\\){}]')
         self._positive_closure(block1)
 
         self.ast['@'] = self.last_node
@@ -408,10 +408,10 @@ class prisParser(Parser):
     def _escapes_(self):
         with self._choice():
             with self._option():
-                self._pattern(r'\\[\'"\\nrtbfv]')
+                self._pattern(r'\\[\'"\\nrtbfv,]')
             with self._option():
                 self._pattern(r'\\u[a-fA-F0-9]{4}')
-            self._error('expecting one of: \\\\[\'"\\\\nrtbfv] \\\\u[a-fA-F0-9]{4}')
+            self._error('expecting one of: \\\\[\'"\\\\nrtbfv,] \\\\u[a-fA-F0-9]{4}')
 
     @graken()
     def _base_simplenumber_(self):

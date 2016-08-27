@@ -1,7 +1,5 @@
 # TODO
 
-* Libraryize, setupize, pipize.
-
 * Obviously this initially targets Python, but there's no reason it shouldn't work for
   other lanugages.
 
